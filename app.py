@@ -4,19 +4,35 @@ import random
 from json import loads
 
 app = Flask(__name__)
-api_url = "http://pokeapi.co/api/v2/pokemon/"
+api_url = "http://pokeapi.co/api/v2/pokemon"
+
+def get_bulk_data(num):
+    url = api_url + '/' + num
+    opener = urllib2.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    json = opener.open(url)
+    json = json.read()
+    return loads(json)
+    
+def get_flavor_text(num):
+    url = api_url + '-species/' + num
+    opener = urllib2.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    json = opener.open(url)
+    json = json.read()
+    
+    # get English description
+    for each in loads(json)["flavor_text_entries"]:
+        if each['language']['name']=='en':
+            return each['flavor_text']
+    return ''
 
 @app.route('/')
 def root():
-    url = api_url + str(int(random.random() *802 + 1))
-    print url
-    req = urllib2.Request(url)
-    #urllib2.Request.add_header('User-agent', 'Please work')
-    json = urllib2.urlopen(url)
-    json = json.read()
-    data = loads(json)
-    print "HOI!!!!"
-    return render_template('index.html', data = data)
+    num = str(int(random.random() * 802 + 1))
+    data = get_bulk_data(num)
+    flavor = get_flavor_text(num)
+    return render_template('index.html', data = data, num = num, flavor = flavor)
 
 if __name__ == '__main__':
     app.debug = True

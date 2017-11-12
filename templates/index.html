@@ -3,22 +3,34 @@
   <head>
     <style>
       body {
-        background: #000050;
-        color: khaki;
+      background-image: url(https://pokewalls.files.wordpress.com/2011/05/25pikachu1920x1080.jpg);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-size: 24px;
+      color: #666666;
+      }
+      h1 {
+      font-size: 32px;
+      }
+      .type {
+      width: 60px;
+      }
+      .sprite {
+      width: 250px;
       }
     </style>
-    <title> Cool <strike>NASA</strike> Pokemon Stuff! </title>
+    <title> Cool Pokemon Stuff! </title>
   </head>
   <body>
     <center> <!-- MUAHAHAHAHHAHAHAHAHA -->
-      <h1> Your Daily Astronomy Picture: "{{ data['title'] }}"</h1>
-      <img src="{{ data['url'] }}">
+      <h1> Your Random Pokemon: {{ data['name'].capitalize() }} (#{{ num }})</h1>
+      <img class="sprite" src="{{ data['sprites']['front_default'] }}">
+      <br />
+      Type: {% for L in data['types'] %}
+      <img class="type" src="https://www.serebii.net/pokedex-rs/type/{{ L['type']['name'] }}.gif">
+      {% endfor %}
     </center>
     <p>
-      {{ data['explanation'] }}
-    </p>
-    <p style="font-size: 10px">
-      Photograph taken {{ data['date'] }}-- Copyright {{ data['copyright'] }}
+      {{ flavor }}
     </p>
   </body>
 </html>
